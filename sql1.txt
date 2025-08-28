@@ -500,3 +500,319 @@ select p.payment_id, c.first_name, month(p.payment_date) ,p.last_update from pay
 
 
 
+use sakila;
+create table studentaccess( id int,sname varchar(10));
+insert into studentaccess value(1,'vinod');
+insert into studentaccess(id) value(1);
+insert into studentaccess(id,sname) value(1,'rahul');  -- best prectics
+select * from studentaccess;
+
+
+
+-- drop tables/remove tables 
+drop table studentaccess;
+create table studentaccess( id int,sname varchar(10),age int);
+insert into studentaccess value(1,'vinod',34);
+insert into studentaccess(id) value(1);
+insert into studentaccess(id,sname) value(1,'rahul'); 
+select * from studentaccess;
+-- create or replace table studentaccess(id int , sname varchar(10),age int);   not work
+
+
+
+
+-- update table
+update studentaccess set sname='sunil';
+select * from studentaccess;
+insert into studentaccess(id,sname) value(2,'rahul'); 
+select * from studentaccess;
+update studentaccess set sname='vinod' where id=2;
+select * from studentaccess;
+update studentaccess set id=2 where age = NULL;
+select * from studentaccess;
+update studentaccess set id=2 where id between 1 and 3; 
+select * from studentaccess;
+-- we can use all operators in where 
+
+
+
+
+
+drop table studentaccess;
+create table studentaccess( id int,sname varchar(10),age int);
+insert into studentaccess value(1,'vinod',34);
+select * from studentaccess;
+delete from studentaccess;
+select * from studentaccess;
+insert into studentaccess value(1,'vinod',34);
+insert into studentaccess value(2,'rahul',24);
+insert into studentaccess value(3,'mohit',22);
+delete from studentaccess where id between 1 and 2;
+select * from studentaccess;
+
+
+
+
+
+-- merge    * not work in mysql
+-- merge into table using referencetable
+-- when condition then statement (inser/update/delete)
+-- delete rows or table data remeaber the structure of the table
+
+
+
+
+truncate table studentaccess;  -- delete  table structure then recreate table structure ones again thats why it comes in ddl
+select * from studentaccess; 
+
+
+
+
+
+-- datatypes
+create table test18 (id tinyint);
+insert into test18 values(10);
+insert into test18 values(-128);
+insert into test18 values(-129);   -- size is smaller 1 byte 2^8 =256 (-128 to 127)
+
+create table test19 (id tinyint unsigned); -- unsigned = only positive values ( 0-255 range)
+insert into test19 values(10);
+insert into test19 values(255);
+insert into test19 values(256);
+insert into test19 values(-128);
+-- small int ,mediumint , int ,bigint
+
+
+
+-- constraint
+-- not null constraint
+drop table studentaccess;
+create table studentaccess( id int,sname varchar(10),age int not null);
+insert into studentaccess value(1,'vinod',null);
+select * from studentaccess;
+
+
+
+
+
+-- default constraint
+drop table studentaccess;
+create table studentaccess( id int default 0,salary int not null);
+insert into studentaccess(salary) value(5000);
+select * from studentaccess;
+
+
+
+
+
+-- unique constraint
+drop table studentaccess;
+create table studentaccess( id int default 0,salary int default 500 unique );
+insert into studentaccess(salary) value(5000);
+insert into studentaccess(id) value(5000);
+insert into studentaccess(id) value(5000);
+select * from studentaccess;
+
+
+
+
+-- primary constraint
+drop table studentaccess;
+create table studentaccess( id int primary key,salary int   );  -- only one primary key is allow
+insert into studentaccess(id) value(5);
+insert into studentaccess(id) value(5);
+select * from studentaccess;
+
+
+
+
+
+
+-- foreign constraint
+drop table studentaccess;
+create table studentinfo( sid int primary key,sname varchar(20), courseid int, foreign key(courseid) references courses(course_id)) ;
+create table courses( course_id int primary key,cname varchar(20));
+insert into courses values(10,'dsa'),(11,'python');
+insert into studentinfo value(1,'vinod',10);
+insert into studentinfo value(2,'vinod',12);
+select * from studentaccess;
+
+
+
+
+
+
+-- foreign constraint
+drop table studentaccess;
+create table studentinfo( sid int,sname varchar(20), courseid int, foreign key(courseid) references courses(course_id),foreign key(sid) references courses(studentid)) ;
+create table courses( course_id int,cname varchar(20),studentid int,primary key(course_id,studentid) );
+insert into courses values(10,'dsa',1),(11,'python',1);
+insert into studentinfo value(1,'vinod',10);
+insert into studentinfo value(2,'vinod',12); -- error becasue there is no course of id 12
+select * from studentaccess;
+
+
+
+
+
+
+-- foreign constraint
+drop table studentinfo;
+drop table courses;
+create table studentinfo(sid int ,sname varchar(20),courseid int,primary key(sid,sname)) ;
+insert into studentinfo value(1,'vinod',10);
+insert into studentinfo value(1,'rahul',10);
+insert into studentinfo value(2,'rahul',10);
+select * from studentinfo;
+
+
+
+
+
+
+
+
+-- foreign constraint
+drop table studentinfo;
+drop table courses;
+create table studentinfo(sid int ,sname varchar(20),courseid int,foreign key() ;
+insert into studentinfo value(1,'vinod',10);
+insert into studentinfo value(1,'rahul',10);
+insert into studentinfo value(2,'rahul',10);
+select * from studentinfo;
+
+
+
+
+
+
+
+-- datatypes  
+-- int (4byte) 2**32
+create table yash1(id int unsigned);
+insert into yash1 value(-10);  -- error because of unsigned 
+
+
+
+
+
+-- tiny int (1 byte)
+-- small int(2 byte)
+-- mediumbyte (3 byte)
+-- big int (2**64)
+
+
+
+
+
+-- char  || fix size charector length  || memory weast || Fixed length. Always stores exactly n characters. If the input is shorter, it is padded with spaces.
+drop table yash1;
+create table yash1(name char(10));
+insert into yash1 value('vinodisagoodperson'); -- error
+select name ,length(name) from yash1;
+insert into yash1 value('vinod         '); -- in char , last white space truncateed
+
+
+
+
+
+-- varchar
+drop table yash1;
+create table yash1(name varchar(10));
+insert into yash1 value('vinodisagoodperson'); -- error
+insert into yash1 value('vinod');
+select name ,char_length(name) from yash1;
+insert into yash1 value('vinod                '); -- in varchar , truncate upto the size of the column
+
+
+
+
+
+-- varchar   || take only longth || no size fix ||Variable length. Stores only the actual characters entered (plus 1–2 bytes for length metadata).
+drop table yash1;
+create table yash1(name varchar(10));
+insert into yash1 value('vinodisagoodperson'); -- error
+insert into yash1 value('vinod');
+select name ,char_length(name) from yash1;
+select name ,length(name) from yash1;
+insert into yash1 value('vinod                '); -- in varchar , truncate upto the size of the column
+
+
+
+
+
+-- date 
+drop table yash1;
+create table yash1(dob date);
+insert into yash1 value(curdate());
+insert into yash1 value( '2026-01-30');
+insert into yash1 value('2026-02-30'); -- error date is incorrect
+insert into yash1 value(now()); -- give warning but add in table and remove the time only date stored 
+select * from yash1;
+
+
+
+
+
+
+-- timestamp 
+drop table yash1;
+create table yash1(dob timestamp);
+insert into yash1 value(now()); 
+select * from yash1;
+
+
+
+
+-- 
+drop table yash1;
+create table yash1(dob timestamp);
+insert into yash1 value(now());
+insert into yash1 value('2039-01-19 03:14:07'); -- out of limit so give error 
+select * from yash1;
+
+ 
+ 
+ 
+ 
+ 
+-- blob binary large object  and used to store images ,video,any types of files
+-- quetion = timestamp vs datetime
+-- quetion  = store the image in rdbms system
+
+
+
+
+
+-- float 
+drop table yash1;
+create table yash1(salary float);
+insert into yash1 value(10.2);
+insert into yash1 value(11.2222222222); -- only take 4 values after .(point)
+select * from yash1;
+
+
+
+
+-- double
+drop table yash1;
+create table yash1(salary double);	
+insert into yash1 value(10.2);
+insert into yash1 value(11.2222222222); -- it take more value then float 
+select * from yash1;
+-- quetions float vs double 
+
+
+-- sql zoo = 1,2,3,4,5,6
+
+
+
+
+
+-- double
+drop table yash1;
+create table yash1(salary double(5,2));  -- it means total value is 5 where 2 is desimal so remaining 5-2=3 these are non desimal values
+insert into yash1 value(10.2);
+insert into yash1 value(11.2222222222); 
+insert into yash1 value(11223); -- error  only 3 non desimal value can s
+select * from yash1;
